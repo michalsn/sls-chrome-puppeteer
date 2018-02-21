@@ -1,0 +1,56 @@
+service: sls-chrome-puppeteer
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: us-west-2
+  timeout: 30
+  environment:
+    SLS_DEBUG: "*"
+    # DEBUG: "*"
+
+plugins:
+  - serverless-webpack
+
+custom:
+  webpack: ./webpack.config.js
+  webpackIncludeModules: true
+
+functions:
+  version:
+    description: Show Chrome version using puppeteer
+    memorySize: 1024
+    timeout: 30
+    handler: src/handlers/version.default
+    events:
+      - http:
+          path: version
+          method: get
+
+  dom:
+    description: Show DOM (and additional info) for given url using puppeteer
+    memorySize: 1024
+    timeout: 30
+    handler: src/handlers/dom.default
+    events:
+      - http:
+          path: dom
+          method: get
+
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Properties:
+        BinaryMediaTypes:
+          - "*/*"
+
+    # Enable X-Ray tracing on Lambda functions
+    # ScreenshotLambdaFunction:
+    #   Properties:
+    #     TracingConfig:
+    #       Mode: Active
+    # PdfLambdaFunction:
+    #   Properties:
+    #     TracingConfig:
+    #       Mode: Active
