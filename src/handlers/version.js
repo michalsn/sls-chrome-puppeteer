@@ -10,7 +10,7 @@ export default async function handler (event, context, callback) {
     contentType = event.headers['Content-Type'] || ''
   }
 
-  if (!['application/json', 'text/html'].includes(contentType)) {
+  if (!['application/json', 'text/plain'].includes(contentType)) {
     contentType = 'application/json'
   }
 
